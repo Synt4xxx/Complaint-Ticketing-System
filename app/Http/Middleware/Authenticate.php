@@ -13,9 +13,13 @@ class Authenticate extends Middleware
      * @return string|null
      */
     protected function redirectTo($request)
-    {
-        if (! $request->expectsJson()) {
-            return route('login');
-        }
+{
+    if (!$request->expectsJson()) {
+        auth()->logout(); // Terminate session on refresh
+        session()->invalidate();
+        session()->regenerateToken();
+        return route('welcome'); // Redirect to welcome.blade.php
     }
+}
+
 }

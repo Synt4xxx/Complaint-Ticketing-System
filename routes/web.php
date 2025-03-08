@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-
 // Home Route
 Route::get('/', function () {
     return view('welcome');
@@ -34,21 +33,32 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 // Protected Routes (only for authenticated users)
 Route::middleware('auth')->group(function () {
-
     // Role-Specific Dashboard Routes
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/dashboard', function () {
             return view('dashboard.admin');
-        })->name('admin.dashboard')->middleware('role:admin');
+        })->name('admin.dashboard');
+
+        // Admin Users Route
+        Route::get('/admin/users', function () {
+            return view('admin.users');
+        })->name('admin.users');
+
+        // Admin Complaints Route
+        Route::get('/admin/complaints', function () {
+            return view('admin.complaints');
+        })->name('admin.complaints');
+    });
     
+    Route::middleware(['auth', 'role:customer'])->group(function () {
         Route::get('/customer/dashboard', function () {
             return view('dashboard.customer');
-        })->name('customer.dashboard')->middleware('role:customer');
-    
-        Route::get('/support/dashboard', function () {
-            return view('dashboard.support');
-        })->name('support.dashboard')->middleware('role:support_staff');
+        })->name('customer.dashboard');
     });
+    
+    Route::get('/support/dashboard', function () {
+        return view('dashboard.support');
+    })->name('support.dashboard')->middleware('role:support_staff');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

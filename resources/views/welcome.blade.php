@@ -22,7 +22,7 @@
     <header class="text-center py-20 bg-blue-500 text-white">
         <h2 class="text-4xl font-bold">Efficient Complaint Management</h2>
         <p class="mt-4 text-lg">Submit, track, and resolve complaints with ease.</p>
-        <a href="{{ route('register') }}" class="mt-6 inline-block bg-white text-blue-600 px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-gray-200">
+        <a href="{{ route('login') }}" class="mt-6 inline-block bg-white text-blue-600 px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-gray-200">
             Get Started
         </a>
     </header>
