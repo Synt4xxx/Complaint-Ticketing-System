@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
@@ -33,21 +34,11 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 // Protected Routes (only for authenticated users)
 Route::middleware('auth')->group(function () {
-    // Role-Specific Dashboard Routes
-    Route::middleware(['auth', 'role:admin'])->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('dashboard.admin');
-        })->name('admin.dashboard');
-
-        // Admin Users Route
-        Route::get('/admin/users', function () {
-            return view('admin.users');
-        })->name('admin.users');
-
-        // Admin Complaints Route
-        Route::get('/admin/complaints', function () {
-            return view('admin.complaints');
-        })->name('admin.complaints');
+    // Replace the existing admin routes with these new ones
+    Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function() {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     });
     
     Route::middleware(['auth', 'role:customer'])->group(function () {

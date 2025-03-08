@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Admin')
 @section('content')
     <div class="min-h-screen bg-gray-100">
         <!-- Include Admin Navigation -->
@@ -25,6 +25,7 @@
                     <p class="text-gray-600 dark:text-gray-200">Manage users and their roles.</p>
                     <a href="{{ route('admin.users') }}" class="mt-3 inline-block text-green-500 dark:text-green-300 hover:text-green-700 dark:hover:text-green-400">Manage Users</a>
                 </div>
+
 
             <!-- Statistics/Recent Activities -->
             <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
