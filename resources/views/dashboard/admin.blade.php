@@ -25,7 +25,7 @@
                     <p class="text-gray-600 dark:text-gray-200">Manage users and their roles.</p>
                     <a href="{{ route('admin.users') }}" class="mt-3 inline-block text-green-500 dark:text-green-300 hover:text-green-700 dark:hover:text-green-400">Manage Users</a>
                 </div>
-
+            </div>
 
             <!-- Statistics/Recent Activities -->
             <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
@@ -34,13 +34,13 @@
                     <!-- New Complaints Counter -->
                     <div class="bg-blue-50 dark:bg-blue-800 p-4 rounded-lg shadow">
                         <p class="font-semibold text-lg text-blue-700 dark:text-blue-200">New Complaints</p>
-                        <p class="text-2xl font-bold text-blue-800 dark:text-blue-400">15</p> <!-- Dynamic Data -->
+                        <p class="text-2xl font-bold text-blue-800 dark:text-blue-400">{{ $newComplaintsCount }}</p> <!-- Dynamic Data -->
                     </div>
 
                     <!-- Active Users Counter -->
                     <div class="bg-green-50 dark:bg-green-800 p-4 rounded-lg shadow">
                         <p class="font-semibold text-lg text-green-700 dark:text-green-200">Active Users</p>
-                        <p class="text-2xl font-bold text-green-800 dark:text-green-400">120</p> <!-- Dynamic Data -->
+                        <p class="text-2xl font-bold text-green-800 dark:text-green-400">{{ $activeUsersCount }}</p> <!-- Dynamic Data -->
                     </div>
                 </div>
             </div>

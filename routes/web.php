@@ -8,9 +8,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 // Home Route
@@ -34,22 +34,29 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 // Protected Routes (only for authenticated users)
 Route::middleware('auth')->group(function () {
-    // Replace the existing admin routes with these new ones
-    Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function() {
+    
+    // Admin Routes (only for admins)
+    Route::prefix('admin')->middleware('role:admin')->group(function() {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
         Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.user.edit');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
     });
-    
-    Route::middleware(['auth', 'role:customer'])->group(function () {
+
+    // Customer Routes (only for customers)
+    Route::middleware('role:customer')->group(function () {
         Route::get('/customer/dashboard', function () {
             return view('dashboard.customer');
         })->name('customer.dashboard');
     });
     
-    Route::get('/support/dashboard', function () {
-        return view('dashboard.support');
-    })->name('support.dashboard')->middleware('role:support_staff');
+    // Support Staff Routes (only for support staff)
+    Route::middleware('role:support_staff')->group(function () {
+        Route::get('/support/dashboard', function () {
+            return view('dashboard.support');
+        })->name('support.dashboard');
+    });
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
