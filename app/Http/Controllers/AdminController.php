@@ -12,9 +12,16 @@ class AdminController extends Controller
     {
         // Fetch statistics (you can adjust these queries based on your schema)
         $newComplaintsCount = Ticket::where('status', 'New')->count();
+        $totalComplaintsCount = Ticket::count();
         $activeUsersCount = User::where('status', 'active')->count();
+        $totalUsersCount = User::count();
 
-        return view('dashboard.admin', compact('newComplaintsCount', 'activeUsersCount'));
+        return view('dashboard.admin', compact(
+            'newComplaintsCount',
+            'totalComplaintsCount',
+            'activeUsersCount',
+            'totalUsersCount'
+        ));
     }
 
     public function complaints()

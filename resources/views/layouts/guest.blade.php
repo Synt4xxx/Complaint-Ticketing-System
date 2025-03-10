@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>Complaint Ticketing System</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -14,37 +14,25 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased bg-gray-50 dark:bg-gray-900">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+            <!-- Back to Home Link -->
+            <div class="w-full sm:max-w-md px-6 mb-6">
+                <a href="/" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
 
-            <!-- Main Content Section (Form) -->
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md px-6 py-8 bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden transform transition-all">
 
-                <!-- Logo Section (Inside the Form) -->
-                <div class="mb-4 text-center">
-                    <a href="/" class="flex justify-center">
-                        <x-application-logo class="w-20 h-20 fill-current text-gray-500 dark:text-gray-300" />
-                    </a>
-                </div>
-
-                <!-- Title Section (Inside the Form) -->
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                        Welcome to {{ config('app.name', 'Laravel') }}!
-                    </h1>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                        We are glad you're here. Please log in or register to continue.
-                    </p>
-                </div>
-
-                <!-- Main Form Content -->
                 {{ $slot }}
 
-                <!-- Footer (Inside the Form) -->
-                <footer class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
+                <footer class="mt-8 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
                 </footer>
-
             </div>
         </div>
     </body>
