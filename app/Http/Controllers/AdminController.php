@@ -62,4 +62,19 @@ class AdminController extends Controller
         return redirect()->route('admin.users')
             ->with('success', 'User updated successfully');
     }
+
+    public function deleteUser(User $user)
+    {
+        // Prevent self-deletion
+        if (auth()->id() === $user->id) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
+        try {
+            $user->delete();
+            return back()->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete user.');
+        }
+    }
 }

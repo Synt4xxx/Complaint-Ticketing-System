@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.user.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+        Route::delete('/admin/users/{user}/delete', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
     });
 
     // Customer Routes (only for customers)

@@ -93,7 +93,7 @@
                                         </a>
 
                                         @if(auth()->id() !== $user->id)
-                                            <form action="{{ route('admin.users.delete', $user->id) }}" 
+                                            <form action="{{ route('admin.user.delete', $user->id) }}" 
                                                   method="POST" 
                                                   class="inline-block" 
                                                   onsubmit="return confirm('Are you sure you want to delete this user?');">
