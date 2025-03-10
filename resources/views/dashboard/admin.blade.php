@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Admin')
 @section('content')
-    <div class="min-h-screen bg-gray-100">
-        <!-- Include Admin Navigation -->
-        @include('layouts.admin-nav')
 
         <!-- Main Content -->
         <div class="container mx-auto p-6">

@@ -27,9 +27,7 @@ class AdminController extends Controller
 
     public function users()
     {
-        // Fetch all users (you can apply additional filters or pagination here if needed)
-        $users = User::all(); // or User::paginate(10) for pagination
-
+        $users = User::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.users', compact('users'));
     }
 
@@ -40,11 +38,16 @@ class AdminController extends Controller
 
     public function updateUser(Request $request, User $user)
     {
+        // Check if admin is trying to change their own role
+        if (auth()->id() === $user->id && $request->role !== 'admin') {
+            return redirect()->back()->with('error', 'You cannot change your own role.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'status' => 'required|in:active,inactive',
-            // Add other fields as needed
+            'role' => 'required|in:admin,customer,support_staff',
         ]);
 
         $user->update($validated);

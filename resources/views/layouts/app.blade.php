@@ -16,9 +16,30 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+            @auth
+                @if(auth()->user()->role === 'admin')
+                    @include('layouts.admin-nav')
+                @elseif(auth()->user()->role === 'customer')
+                    @include('layouts.customer-nav')
+                @endif
+            @endauth
+
+            <!-- Flash Messages -->
+            @if (session('success'))
+                <div class="bg-green-100 text-green-800 p-3 rounded mb-4 mx-4 mt-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="bg-red-100 text-red-800 p-3 rounded mb-4 mx-4 mt-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- Page Content -->
             <main>
-              @yield('content')
+                @yield('content')
             </main>
         </div>
     </body>

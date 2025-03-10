@@ -4,23 +4,23 @@
             <!-- Logo -->
             <div class="flex">
                 <div class="flex items-center">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Admin Dashboard</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Customer Dashboard</h2>
                 </div>
             </div>
 
             <!-- Navigation Links -->
             <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
-                <a href="{{ route('admin.dashboard') }}" 
+                <a href="{{ route('customer.dashboard') }}" 
                    class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 px-3 py-2 rounded-md text-sm">
                     Dashboard
                 </a>
-                <a href="{{ route('admin.complaints') }}" 
+                <a href="{{ route('complaints.index') }}" 
                    class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 px-3 py-2 rounded-md text-sm">
-                    Complaints
+                    My Complaints
                 </a>
-                <a href="{{ route('admin.users') }}" 
+                <a href="{{ route('complaints.create') }}" 
                    class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 px-3 py-2 rounded-md text-sm">
-                    Users
+                    New Complaint
                 </a>
 
                 <!-- Profile Dropdown -->
@@ -57,4 +57,4 @@
             </div>
         </div>
     </div>
-</nav>
+</nav> 
