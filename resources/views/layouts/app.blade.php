@@ -13,6 +13,12 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Add the theme script in the head section -->
+        <script>
+            // Add the theme initialization and toggle functions here
+            // (Copy the script from welcome.blade.php)
+        </script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
