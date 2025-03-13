@@ -2,30 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Complaint;
 use Illuminate\Http\Request;
+use App\Models\Complaint;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
-        $user = Auth::user();
-        
-        $totalComplaints = $user->complaints()->count();
-        $activeComplaints = $user->complaints()->whereIn('status', ['New', 'In Progress'])->count();
-        $resolvedComplaints = $user->complaints()->where('status', 'Resolved')->count();
-        $recentComplaints = $user->complaints()
-            ->with('user')
-            ->latest()
-            ->take(5)
+        $userId = Auth::id();
+
+        // Total complaints by the customer
+        $totalComplaints = Complaint::where('user_id', $userId)->count();
+
+        // Active complaints (status 'New' or 'In Progress')
+        $activeComplaints = Complaint::where('user_id', $userId)
+            ->whereIn('status', ['New', 'In Progress'])
+            ->count();
+
+        // Resolved complaints
+        $resolvedComplaints = Complaint::where('user_id', $userId)
+            ->where('status', 'Resolved')
+            ->count();
+
+        // Recent complaints (latest 5)
+        $recentComplaints = Complaint::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
             ->get();
 
-        return view('dashboard.customer', compact(
+        // Return the view with data
+        return view('customer', compact(
             'totalComplaints',
             'activeComplaints',
             'resolvedComplaints',
             'recentComplaints'
         ));
     }
-} 
+}

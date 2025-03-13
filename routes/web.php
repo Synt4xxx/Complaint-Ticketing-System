@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/customer/dashboard', function () {
             return view('dashboard.customer');
         })->name('customer.dashboard');
+
+        Route::get('/customer/dashboard', [DashboardController::class, 'customer'])->name('customer.dashboard');
     });
     
     // Support Staff Routes (only for support staff)
