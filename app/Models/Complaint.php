@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ComplaintAttachment; // ✅ Import this!
 
 class Complaint extends Model
-{
+{   
+    use HasFactory;
+
+    const STATUS_NEW = 'New';
+    const STATUS_IN_PROGRESS = 'In Progress';
+    const STATUS_RESOLVED = 'Resolved';
     use HasFactory;
 
     protected $fillable = [
