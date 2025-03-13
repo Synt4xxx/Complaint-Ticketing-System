@@ -8,18 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    public function dashboard()
+    public function index()
     {
         $user = Auth::user();
         
-        $totalComplaints = Complaint::where('user_id', $user->id)->count();
-        $activeComplaints = Complaint::where('user_id', $user->id)
-            ->whereIn('status', ['New', 'In Progress'])
-            ->count();
-        $resolvedComplaints = Complaint::where('user_id', $user->id)
-            ->where('status', 'Resolved')
-            ->count();
-        $recentComplaints = Complaint::where('user_id', $user->id)
+        $totalComplaints = $user->complaints()->count();
+        $activeComplaints = $user->complaints()->whereIn('status', ['New', 'In Progress'])->count();
+        $resolvedComplaints = $user->complaints()->where('status', 'Resolved')->count();
+        $recentComplaints = $user->complaints()
+            ->with('user')
             ->latest()
             ->take(5)
             ->get();
