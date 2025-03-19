@@ -1,17 +1,22 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ Auth::check() && Auth::user()->role == 'admin' ? 'Admin Dashboard' : 'User Dashboard' }}</title>
+    @vite('resources/css/app.css')
+    @stack('styles')
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    @if(Auth::check() && Auth::user()->role == 'admin')
+        @include('partials.admin-navbar')
+    @else
+        @include('partials.user-navbar')
+    @endif
 
-namespace App\View\Components;
+    <main class="container mx-auto p-6">
+        @yield('content')
+    </main>
 
-use Illuminate\View\Component;
-use Illuminate\View\View;
-
-class AppLayout extends Component
-{
-    /**
-     * Get the view / contents that represents the component.
-     */
-    public function render(): View
-    {
-        return view('layouts.app');
-    }
-}
+    @stack('scripts')
+</body>
+</html>

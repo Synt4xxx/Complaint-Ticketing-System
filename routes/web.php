@@ -38,13 +38,14 @@ Route::middleware('auth')->group(function () {
     
     // Admin Routes (only for admins)
     Route::prefix('admin')->middleware('role:admin')->group(function() {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
         Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.user.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
         Route::delete('/admin/users/{user}/delete', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
+        
     });
 
     // Customer Routes (only for customers)
