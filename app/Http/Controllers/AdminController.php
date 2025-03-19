@@ -26,11 +26,11 @@ class AdminController extends Controller
 
     public function complaints()
     {
-        // Fetch all complaints
-        $complaints = Ticket::all(); // You can add conditions like 'where status = new' if necessary
-
+        $complaints = Ticket::with('user')->paginate(10); // Paginate for better performance
         return view('admin.complaints', compact('complaints'));
     }
+    
+    
 
     public function users()
     {

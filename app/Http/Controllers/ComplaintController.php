@@ -154,4 +154,10 @@ class ComplaintController extends Controller
         return redirect()->route('complaints.index')
             ->with('success', 'Your complaint has been deleted successfully.');
     }
+    public function user()
+{
+    $complaints = Complaint::with('user')->paginate(10); // Fetch complaints with user details and paginate results
+    return view('admin.complaint-details', compact('complaints'));
+}
+
 }

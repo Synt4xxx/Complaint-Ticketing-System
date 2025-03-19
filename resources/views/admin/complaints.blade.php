@@ -1,6 +1,6 @@
-<!-- resources/views/admin/complaints.blade.php -->
 @extends('layouts.app')
 @section('title', 'Manage Complaints')
+
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -15,16 +15,6 @@
                     </svg>
                 </a>
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Manage Complaints</h1>
-            </div>
-            
-            <!-- Filter/Search Section (Optional) -->
-            <div class="flex items-center space-x-4">
-                <select class="rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                    <option value="">All Status</option>
-                    <option value="new">New</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                </select>
             </div>
         </div>
 
@@ -50,7 +40,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $complaint->user->name }}
+                                            {{ $complaint->user->name ?? 'Unknown' }} <!-- Handle cases where user may be null -->
                                         </div>
                                     </div>
                                 </td>
@@ -88,11 +78,9 @@
             </div>
             
             <!-- Pagination -->
-            @if(method_exists($complaints, 'links'))
-                <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
-                    {{ $complaints->links() }}
-                </div>
-            @endif
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                {{ $complaints->links() }}
+            </div>
         </div>
     </div>
 </div>

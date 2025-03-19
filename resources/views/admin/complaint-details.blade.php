@@ -1,32 +1,49 @@
-<!-- resources/views/admin/complaint-details.blade.php -->
-@extends('layouts.app')
-
-@section('content')
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Complaint Details</h1>
-        
-        <!-- Complaint Information -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mt-6">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Complaint ID: {{ $complaint->id }}</h2>
-            <p class="text-gray-600 dark:text-gray-400">Customer: {{ $complaint->user->name }}</p>
-            <p class="text-gray-600 dark:text-gray-400">Priority: {{ $complaint->priority }}</p>
-            <p class="text-gray-600 dark:text-gray-400">Status: {{ $complaint->status }}</p>
-            <p class="text-gray-600 dark:text-gray-400 mt-4">Description: {{ $complaint->description }}</p>
-        </div>
-
-        <!-- Update Complaint Status -->
-        <form method="POST" action="{{ route('admin.complaint.update', $complaint->id) }}">
-            @csrf
-            @method('PUT')
-            <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Update Status</label>
-            <select name="status" id="status" class="mt-2 block w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
-                <option value="New" {{ $complaint->status == 'New' ? 'selected' : '' }}>New</option>
-                <option value="In Progress" {{ $complaint->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                <option value="Resolved" {{ $complaint->status == 'Resolved' ? 'selected' : '' }}>Resolved</option>
-                <option value="Closed" {{ $complaint->status == 'Closed' ? 'selected' : '' }}>Closed</option>
-            </select>
-
-            <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Update Status</button>
-        </form>
-    </div>
-@endsection
+<tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+    @forelse($complaints as $complaint)
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                #{{ $complaint->id }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                        {{ $complaint->user->name ?? 'Unknown' }}
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                    @if($complaint->status === 'New') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                    @elseif($complaint->status === 'In Progress') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                    @else bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                    @endif">
+                    {{ $complaint->status }}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                    @if(isset($complaint->priority) && $complaint->priority === 'High') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                    @elseif(isset($complaint->priority) && $complaint->priority === 'Medium') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                    @else bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                    @endif">
+                    {{ $complaint->priority ?? 'Low' }} <!-- Default to Low if not set -->
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <a href="{{ route('admin.complaint.show', $complaint->id) }}" 
+                   class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                    View Details
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                No complaints found.
+            </td>
+        </tr>
+    @endforelse
+</tbody>

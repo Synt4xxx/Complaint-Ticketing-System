@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 // Admin Routes (only for admins)
 Route::prefix('admin')->middleware('role:admin')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-    Route::get('/admin/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
+    Route::get('/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
@@ -70,7 +70,6 @@ Route::prefix('admin')->middleware('role:admin')->group(function() {
 
     // Complaint Ticketing Routes
     Route::resource('complaints', ComplaintController::class);
-    Route::get('/admin/complaints', [AdminController::class, 'complaints'])->name('admin.complaints');
 
 
 
