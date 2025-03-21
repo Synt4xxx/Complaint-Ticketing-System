@@ -37,6 +37,13 @@ class AdminController extends Controller
         $complaint = Complaint::with('user')->findOrFail($id);
         return view('admin.complaint-show', compact('complaint'));
     }    
+    public function destroy($id)
+{
+    $complaint = Complaint::findOrFail($id);
+    $complaint->delete();
+
+    return redirect()->route('admin.complaints')->with('success', 'Complaint deleted successfully.');
+}
     
 
     public function users()

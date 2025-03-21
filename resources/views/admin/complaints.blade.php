@@ -62,15 +62,30 @@
                                         {{ $complaint->priority }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm flex space-x-2">
+                                    <!-- View Details Button -->
                                     <a href="{{ route('admin.complaint-show', $complaint->id) }}"
-                                       class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                                       class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition duration-150">
                                         View Details
                                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                         </svg>
                                     </a>
-                                </td>
+                                
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('admin.complaints.destroy', $complaint->id) }}" method="POST"
+                                          onsubmit="return confirm('Are you sure you want to delete this complaint? This action cannot be undone.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="inline-flex items-center px-3 py-2 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition duration-150">
+                                            Delete
+                                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>                                
                             </tr>
                         @endforeach
                     </tbody>

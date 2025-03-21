@@ -45,6 +45,8 @@ Route::prefix('admin')->middleware('role:admin')->group(function() {
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
     Route::delete('/users/{user}/delete', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
+    Route::delete('/admin/complaints/{id}', [AdminController::class, 'destroy'])->name('admin.complaints.destroy');
+
 });
 
     // Customer Routes (only for customers)
