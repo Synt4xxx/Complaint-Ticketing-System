@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Complaint; // ✅ Add this
+
 
 class AdminController extends Controller
 {
@@ -26,10 +28,15 @@ class AdminController extends Controller
 
     public function complaints()
     {
-        $complaints = Ticket::with('user')->paginate(10); // Paginate for better performance
-        return view('admin.complaints', compact('complaints'));
+        $complaints = Complaint::with('user')->paginate(10); // Ensure user relationship is loaded
+    return view('admin.complaints', compact('complaints'));
     }
     
+    public function showComplaint($id)
+    {
+        $complaint = Complaint::with('user')->findOrFail($id);
+        return view('admin.complaint-show', compact('complaint'));
+    }    
     
 
     public function users()

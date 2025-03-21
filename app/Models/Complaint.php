@@ -13,7 +13,6 @@ class Complaint extends Model
     const STATUS_NEW = 'New';
     const STATUS_IN_PROGRESS = 'In Progress';
     const STATUS_RESOLVED = 'Resolved';
-    use HasFactory;
 
     protected $fillable = [
         'drugstore_name',
