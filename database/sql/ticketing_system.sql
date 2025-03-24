@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2025 at 07:55 AM
+-- Generation Time: Mar 22, 2025 at 09:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,27 +31,23 @@ CREATE TABLE `complaints` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `drugstore_name` varchar(255) NOT NULL,
-  `complaint_type` varchar(255) NOT NULL,
-  `incident_date` date NOT NULL,
-  `priority` enum('low','medium','high','urgent') NOT NULL DEFAULT 'low',
-  `description` text NOT NULL,
-  `status` enum('New','In Progress','Resolved','Closed') NOT NULL DEFAULT 'New',
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `description` text DEFAULT NULL,
+  `priority` varchar(255) NOT NULL DEFAULT 'Normal',
+  `incident_date` date DEFAULT NULL,
+  `complaint_type` varchar(255) DEFAULT NULL,
+  `drugstore_name` varchar(255) DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `assigned_to` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'New'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `complaints`
 --
 
-INSERT INTO `complaints` (`id`, `created_at`, `updated_at`, `drugstore_name`, `complaint_type`, `incident_date`, `priority`, `description`, `status`, `user_id`) VALUES
-(1, '2025-03-12 19:03:18', '2025-03-12 19:03:18', 'mercury', 'service_issue', '2025-03-13', 'low', 'SQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t exist', 'New', 7),
-(2, '2025-03-12 19:04:34', '2025-03-12 19:04:34', 'mercury', 'service_issue', '2025-03-13', 'low', 'SQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t exist', 'New', 7),
-(3, '2025-03-12 19:06:14', '2025-03-12 19:06:14', 'mercury', 'service_issue', '2025-03-13', 'low', 'SQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t existSQLSTATE[42S02]: Base table or view not found: 1146 Table \'ticketing_system.complaints\' doesn\'t exist', 'New', 7),
-(4, '2025-03-12 21:13:25', '2025-03-12 21:13:25', 'mercury', 'medication_quality', '2025-03-13', 'high', 'asdasfasfasfasfasfasfasfasfassafasfasfasfasfasf', 'New', 7),
-(5, '2025-03-12 21:13:47', '2025-03-12 21:13:47', 'mercury', 'medication_quality', '2025-03-13', 'high', 'asdasfasfasfasfasfasfasfasfassafasfasfasfasfasf', 'New', 7),
-(6, '2025-03-12 21:14:23', '2025-03-12 21:14:23', 'mercury', 'medication_quality', '2025-03-13', 'high', 'asfasfasfasasfasfasfasfasfasfasfasfasfasfasfasfasfasfasfas', 'New', 7),
-(7, '2025-03-12 21:29:31', '2025-03-12 21:29:31', 'mercury', 'medication_quality', '2025-03-13', 'low', '<?php\r\n\r\nnamespace App\\Http\\Controllers;\r\n\r\nuse Illuminate\\Http\\Request;\r\nuse App\\Models\\Complaint;\r\nuse Illuminate\\Support\\Facades\\Auth;\r\n\r\nclass CustomerController extends Controller\r\n{\r\n    public function dashboard()\r\n    {\r\n        $userId = Auth::id();\r\n\r\n        // Total complaints by the customer\r\n        $totalComplaints = Complaint::where(\'user_id\', $userId)->count();\r\n\r\n        // Active complaints (status \'New\' or \'In Progress\')\r\n        $activeComplaints = Complaint::where(\'user_id\', $userId)\r\n            ->whereIn(\'status\', [\'New\', \'In Progress\'])\r\n            ->count();\r\n\r\n        // Resolved complaints\r\n        $resolvedComplaints = Complaint::where(\'user_id\', $userId)\r\n            ->where(\'status\', \'Resolved\')\r\n            ->count();\r\n\r\n        // Recent complaints (latest 5)\r\n        $recentComplaints = Complaint::where(\'user_id\', $userId)\r\n            ->orderBy(\'created_at\', \'desc\')\r\n            ->limit(5)\r\n            ->get();\r\n\r\n        // Return the view with data\r\n        return view(\'customer\', compact(\r\n            \'totalComplaints\',\r\n            \'activeComplaints\',\r\n            \'resolvedComplaints\',\r\n            \'recentComplaints\'\r\n        ));\r\n    }\r\n}', 'New', 7);
+INSERT INTO `complaints` (`id`, `created_at`, `updated_at`, `description`, `priority`, `incident_date`, `complaint_type`, `drugstore_name`, `user_id`, `assigned_to`, `status`) VALUES
+(11, '2025-03-20 21:15:05', '2025-03-20 21:15:05', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'high', '1111-11-11', 'medication_quality', 'Mercury Drugs, Quezon City', 3, NULL, 'New'),
+(12, '2025-03-20 21:15:28', '2025-03-20 21:15:28', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'urgent', '1111-11-11', 'safety', 'Mercury Drugs, Fairview', 3, NULL, 'New');
 
 -- --------------------------------------------------------
 
@@ -93,14 +89,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2025_03_07_024003_add_role_to_users_table', 1),
 (6, '2025_03_08_075527_create_tickets_table', 1),
 (7, '2025_03_08_075853_add_status_to_tickets_table', 1),
-(8, 'xxxx_xx_xx_add_status_to_tickets_table', 2),
-(9, 'xxxx_xx_xx_add_status_to_users_table', 2),
-(10, '2025_03_13_025835_create_complaints_table', 3),
-(11, 'xxxx_xx_xx_add_drugstore_fields_to_complaints_table', 3),
-(12, '2025_03_13_030052_add_description_to_complaints_table', 4),
-(13, 'xxxx_xx_xx_add_description_to_complaints_table', 4),
-(14, '2025_03_13_030232_add_user_id_to_complaints_table', 5),
-(15, 'xxxx_xx_xx_add_user_id_to_complaints_table', 5);
+(8, '2025_03_13_025835_create_complaints_table', 1),
+(9, '2025_03_13_030052_add_description_to_complaints_table', 1),
+(10, '2025_03_13_030232_add_user_id_to_complaints_table', 1),
+(11, '2025_03_19_060323_add_role_to_users_table', 1),
+(12, '2025_03_19_061731_add_status_to_complaints_table', 1),
+(14, '2025_03_19_062217_add_status_to_complaints_table', 2);
 
 -- --------------------------------------------------------
 
@@ -142,8 +136,7 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `tickets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `status` enum('New','In Progress','Resolved','Closed') NOT NULL DEFAULT 'New'
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -162,7 +155,7 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
+  `status` varchar(50) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -170,9 +163,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `status`) VALUES
-(7, 'Customer User', 'customer@gmail.com', 'customer', '2025-03-12 18:30:06', '$2y$10$NdWpzfEpFMBj.RAG/Dvuq.IRIRHr/7TkVogK7.oLw7P16DkpSum7a', 'cjdQqoMN8OOVYZZdoahFmnZPfD1uOInoHkfYniPfpnKDty4hqJh6OND2FdSq', '2025-03-12 18:30:06', '2025-03-12 18:30:06', 'active'),
-(8, 'Admin User', 'admin@gmail.com', 'admin', '2025-03-12 18:30:23', '$2y$10$y8ZoryBC2DCFbrt.7aip1OI1E5wdGExXTwqiaNGS8Qju0y0MGhiTS', 'uj15dS9VMbUSHxgV01C3nclx0QKDKAKdpQfnQ16n2yaydoyeQTZHjmJkRMgn', '2025-03-12 18:30:23', '2025-03-12 18:30:23', 'active'),
-(9, 'support staff', 'support@gmail.com', 'support_staff', NULL, '$2y$10$kABz4JMAdOccVqafYo/CWebO9JDeprR3Ah9iLmsk1YhopmlkLj6QO', NULL, '2025-03-12 18:34:59', '2025-03-12 18:34:59', 'active');
+(1, 'Admin User', 'admin@gmail.com', 'admin', '2025-03-18 23:51:41', '$2y$10$4K40c3FWqVKgt6uf7854HejleQkbTtJAM8wQwRomk2JcYPzXZB4Q6', 'vMqSb9TG6UkLrgRyH0gpudMKW7e2ZEVKLH962KuZWMy5wzXZoJnQHdEmCQPW', '2025-03-18 23:51:41', '2025-03-18 23:51:41', 'active'),
+(3, 'customer', 'customer@gmail.com', 'customer', NULL, '$2y$10$qDd.aK71I2UNTO3OMqZzfuKs6GuAb0CfKnonvPxJT2DOkROIYEXMO', NULL, '2025-03-19 01:02:46', '2025-03-19 01:02:46', 'active'),
+(5, 'support staff', 'support@gmail.com', 'support_staff', NULL, '$2y$10$S3kG9qIW/2FTFuB8yTAWlOJ4V.1RdsgRTZNteySGrNE7/QiwOvAhi', NULL, '2025-03-20 22:34:29', '2025-03-20 22:34:29', 'active');
 
 --
 -- Indexes for dumped tables
@@ -183,7 +176,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `passwo
 --
 ALTER TABLE `complaints`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `complaints_user_id_foreign` (`user_id`);
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -233,7 +226,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -245,7 +238,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -263,7 +256,7 @@ ALTER TABLE `tickets`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -273,7 +266,7 @@ ALTER TABLE `users`
 -- Constraints for table `complaints`
 --
 ALTER TABLE `complaints`
-  ADD CONSTRAINT `complaints_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `complaints_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

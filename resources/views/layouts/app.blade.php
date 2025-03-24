@@ -14,19 +14,36 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <!-- Add the theme script in the head section -->
+        <!-- Theme Script -->
         <script>
-            // Add the theme initialization and toggle functions here
-            // (Copy the script from welcome.blade.php)
+            document.addEventListener("DOMContentLoaded", function () {
+                if (localStorage.getItem("theme") === "dark") {
+                    document.documentElement.classList.add("dark");
+                }
+            });
+
+            function toggleTheme() {
+                if (document.documentElement.classList.contains("dark")) {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                }
+            }
         </script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+
+            <!-- Navigation -->
             @auth
-                @if(auth()->user()->role === 'admin')
+                @if(auth()->check() && auth()->user()->role === 'admin')
                     @include('layouts.admin-nav')
-                @elseif(auth()->user()->role === 'customer')
+                @elseif(auth()->check() && auth()->user()->role === 'customer')
                     @include('layouts.customer-nav')
+                @elseif(auth()->check() && auth()->user()->role === 'support_staff')
+                    @include('layouts.support-nav')
                 @endif
             @endauth
 
