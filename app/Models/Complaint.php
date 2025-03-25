@@ -39,4 +39,9 @@ class Complaint extends Model
     {
         return $this->hasMany(ComplaintAttachment::class);
     }
+    public function support()
+{
+    return $this->belongsTo(User::class, 'support_id');
+}
+
 }

@@ -28,6 +28,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Support Staff</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -38,10 +39,8 @@
                                     #{{ $complaint->id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $complaint->user->name ?? 'Unknown' }} <!-- Handle cases where user may be null -->
-                                        </div>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ $complaint->user->name ?? 'Unknown' }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -62,41 +61,115 @@
                                         {{ $complaint->priority }}
                                     </span>
                                 </td>
+                    
+                                <!-- New Column: Assigned Support Staff -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ $complaint->support->name ?? 'Unassigned' }}
+                                </td>
+                    
                                 <td class="px-6 py-4 whitespace-nowrap text-sm flex space-x-2">
-                                    <!-- View Details Button -->
                                     <a href="{{ route('admin.complaint-show', $complaint->id) }}"
                                        class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition duration-150">
                                         View Details
-                                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                        </svg>
                                     </a>
-                                
-                                    <!-- Delete Button -->
+                    
+                                    <button onclick="openAssignModal({{ $complaint->id }})"
+                                            class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition duration-150">
+                                        Assign
+                                    </button>
+                    
                                     <form action="{{ route('admin.complaints.destroy', $complaint->id) }}" method="POST"
-                                          onsubmit="return confirm('Are you sure you want to delete this complaint? This action cannot be undone.');">
+                                          onsubmit="return confirm('Are you sure you want to delete this complaint?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
                                                 class="inline-flex items-center px-3 py-2 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition duration-150">
                                             Delete
-                                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
                                         </button>
                                     </form>
                                 </td>                                
                             </tr>
                         @endforeach
                     </tbody>
-                </table>
+                                    </table>
             </div>
-            
-            <!-- Pagination -->
+
             <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
                 {{ $complaints->links() }}
             </div>
         </div>
     </div>
 </div>
+
+<!-- Assign Complaint Modal -->
+<div id="assignModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Assign Complaint</h2>
+        
+        <form id="assignForm" action="{{ route('admin.complaints.assign', ':id') }}" method="POST">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="complaint_id" id="complaint_id">
+        
+    <label for="support_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        Select Support Staff
+    </label>
+    <select name="support_id" id="support_id" class="w-full border-gray-300 rounded-lg">
+        <option value="">-- Select Support Staff --</option>
+        @foreach($supportStaff as $support)
+            <option value="{{ $support->id }}">{{ $support->name }}</option>
+        @endforeach
+    </select>
+
+    <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" onclick="closeAssignModal()" class="px-4 py-2 bg-gray-500 text-white rounded-lg">
+            Cancel
+        </button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+            Assign
+        </button>
+    </div>
+</form>
+
+    </div>
+    <script>
+       function openAssignModal(complaintId) {
+    document.getElementById('complaint_id').value = complaintId;
+    let form = document.getElementById('assignForm');
+    form.action = form.action.replace(':id', complaintId); // Set correct ID in route
+    document.getElementById('assignModal').classList.remove('hidden');
+}      
+        function closeAssignModal() {
+            document.getElementById('assignModal').classList.add('hidden');
+        }
+        
+        function submitAssignForm(event) {
+            event.preventDefault(); 
+        
+            let complaintId = document.getElementById('complaint_id').value;
+            let formData = new FormData(document.getElementById('assignForm'));
+        
+            fetch(`/admin/assign-complaint/${complaintId}`, {
+                method: 'PUT',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ Complaint assigned successfully!");
+                    location.reload();
+                } else {
+                    alert("❌ " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("❌ Something went wrong!");
+            });
+        }
+        </script>
+
 @endsection

@@ -159,5 +159,23 @@ class ComplaintController extends Controller
     $complaints = Complaint::with('user')->paginate(10); // Fetch complaints with user details and paginate results
     return view('admin.complaint-details', compact('complaints'));
 }
+public function assignComplaint(Request $request, $id)
+{
+    $request->validate([
+        'support_id' => 'required|exists:users,id'
+    ]);
+
+    $complaint = Complaint::findOrFail($id);
+    $complaint->support_id = $request->support_id;
+    $complaint->status = 'Assigned'; // Update status
+    $complaint->save();
+
+    return redirect()->route('admin.dashboard')->with('success', 'Complaint assigned successfully.');
+}
+public function assignedComplaints()
+{
+    $assignedComplaints = Complaint::where('support_id', auth()->id())->get();
+    return view('support.assigned_complaints', compact('assignedComplaints'));
+}
 
 }

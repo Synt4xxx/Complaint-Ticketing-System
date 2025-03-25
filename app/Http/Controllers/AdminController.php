@@ -91,4 +91,42 @@ class AdminController extends Controller
             return back()->with('error', 'Failed to delete user.');
         }
     }
+
+    public function adminIndex() // Change from index() to adminIndex()
+{
+    $complaints = Complaint::with('user')->paginate(10); // Fetch complaints
+    $supportStaff = User::where('role', 'Support_staff')->get(); // Fetch Support Staff
+    return view('admin.complaints', compact('complaints', 'supportStaff'));
 }
+public function assign(Request $request, $id)
+{
+    $complaint = Complaint::findOrFail($id);
+
+    // Validate input and ensure assigned user is a support staff
+    $request->validate([
+        'support_id' => 'required|exists:users,id'
+    ]);
+
+    // Check if the selected user is actually a support staff
+    $supportUser = User::where('id', $request->support_id)->where('role', 'support')->first();
+    if (!$supportUser) {
+        return redirect()->back()->with('error', 'Invalid support staff selection.');
+    }
+
+    // Assign the complaint
+    $complaint->support_id = $request->support_id;
+    $complaint->save();
+
+    return redirect()->back()->with('success', 'Complaint assigned successfully!');
+}
+public function assignSupport(Request $request, $id)
+{
+    $complaint = Complaint::findOrFail($id);
+    $complaint->support_id = $request->support_id;
+    $complaint->save();
+
+    return response()->json(['success' => true, 'message' => 'Complaint assigned successfully!']);
+}
+
+}
+

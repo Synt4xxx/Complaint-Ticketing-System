@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.user.update');
         Route::delete('/users/{user}/delete', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
         Route::delete('/complaints/{id}', [AdminController::class, 'destroy'])->name('admin.complaints.destroy');
+        Route::get('/admin/complaints', [AdminController::class, 'adminIndex'])->name('admin.complaints');
+        Route::post('/admin/complaints/{id}/assign', [ComplaintController::class, 'assign'])->name('admin.complaints.assign');
+        Route::post('/admin/complaints', [ComplaintController::class, 'store'])->name('admin.complaints.store');
     });
 
     // 🔹 Customer Routes (only for customers)
@@ -60,14 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/support/dashboard', [SupportController::class, 'support'])->name('support.dashboard');
        
-    Route::get('support/assigned-complaints', [SupportController::class, 'assignedComplaints'])
-        ->name('support.assigned_complaints');
+    Route::get('support/assigned-complaints', [SupportController::class, 'assignedComplaints'])->name('support.assigned_complaints');
 
-    Route::get('support/in-progress-complaints', [SupportController::class, 'inProgressComplaints'])
-        ->name('support.in_progress_complaints');
+    Route::get('support/in-progress-complaints', [SupportController::class, 'inProgressComplaints'])->name('support.in_progress_complaints');
 
-    Route::get('support/resolved-complaints', [SupportController::class, 'resolvedComplaints'])
-        ->name('support.resolved_complaints');
+    Route::get('support/resolved-complaints', [SupportController::class, 'resolvedComplaints'])->name('support.resolved_complaints');
 
     Route::get('support/view-complaint/{id}', function ($id) {
         return "Complaint ID: " . $id;
