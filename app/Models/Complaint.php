@@ -43,5 +43,8 @@ class Complaint extends Model
 {
     return $this->belongsTo(User::class, 'support_id');
 }
+public function assignedUser() {
+    return $this->belongsTo(User::class, 'assigned_to');
+}
 
 }

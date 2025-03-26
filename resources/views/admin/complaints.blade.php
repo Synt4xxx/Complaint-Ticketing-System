@@ -64,8 +64,15 @@
                     
                                 <!-- New Column: Assigned Support Staff -->
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $complaint->support->name ?? 'Unassigned' }}
+                                    @if($complaint->assignedUser)
+                                        {{ $complaint->assignedUser->name }}
+                                    @else
+                                        <span class="text-red-500">Unassigned</span>
+                                    @endif
                                 </td>
+                                
+                                
+                                
                     
                                 <td class="px-6 py-4 whitespace-nowrap text-sm flex space-x-2">
                                     <a href="{{ route('admin.complaint-show', $complaint->id) }}"
@@ -108,7 +115,6 @@
         
         <form id="assignForm" action="{{ route('admin.complaints.assign', ':id') }}" method="POST">
             @csrf
-            @method('PUT')
             <input type="hidden" name="complaint_id" id="complaint_id">
         
     <label for="support_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -133,34 +139,47 @@
 
     </div>
     <script>
-       function openAssignModal(complaintId) {
-    document.getElementById('complaint_id').value = complaintId;
-    let form = document.getElementById('assignForm');
-    form.action = form.action.replace(':id', complaintId); // Set correct ID in route
-    document.getElementById('assignModal').classList.remove('hidden');
-}      
+        function openAssignModal(complaintId) {
+            document.getElementById('complaint_id').value = complaintId;
+            
+            // Update form action dynamically
+            let form = document.getElementById('assignForm');
+            form.action = `/admin/complaints/${complaintId}/assign`;
+        
+            document.getElementById('assignModal').classList.remove('hidden');
+        }
+        
         function closeAssignModal() {
             document.getElementById('assignModal').classList.add('hidden');
         }
         
-        function submitAssignForm(event) {
-            event.preventDefault(); 
+        document.getElementById('assignForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from reloading the page
         
             let complaintId = document.getElementById('complaint_id').value;
-            let formData = new FormData(document.getElementById('assignForm'));
+            let supportId = document.getElementById('support_id').value;
+            let formData = new FormData();
+            formData.append('_token', document.querySelector('input[name="_token"]').value);
+            formData.append('support_id', supportId);
         
-            fetch(`/admin/assign-complaint/${complaintId}`, {
-                method: 'PUT',
+            fetch(`/admin/complaints/${complaintId}/assign`, {
+                method: 'POST',
                 body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' } // Identify as an AJAX request
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert("✅ Complaint assigned successfully!");
-                    location.reload();
+        
+                    // Update the UI dynamically
+                    let row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+                    if (row) {
+                        row.querySelector(".status").innerHTML = `<span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Assigned</span>`;
+                        row.querySelector(".support-staff").innerText = data.support_name;
+                    }
+        
+                    closeAssignModal();
                 } else {
                     alert("❌ " + data.message);
                 }
@@ -169,7 +188,7 @@
                 console.error('Error:', error);
                 alert("❌ Something went wrong!");
             });
-        }
+        });
         </script>
-
+        
 @endsection

@@ -177,5 +177,32 @@ public function assignedComplaints()
     $assignedComplaints = Complaint::where('support_id', auth()->id())->get();
     return view('support.assigned_complaints', compact('assignedComplaints'));
 }
+public function assign(Request $request, $id) {
+    try {
+        $complaint = Complaint::findOrFail($id);
+
+        // Check if complaint is already assigned
+        if ($complaint->assigned_to) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This complaint is already assigned to ' . $complaint->assignedUser->name . '.'
+            ]);
+        }
+
+        $request->validate([
+            'support_id' => 'required|exists:users,id',
+        ]);
+
+        $complaint->assigned_to = $request->support_id;
+        $complaint->status = 'Assigned';
+        $complaint->save();
+
+        return response()->json(['success' => true, 'message' => 'Complaint assigned successfully.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Something went wrong!']);
+    }
+}
+
 
 }
+
