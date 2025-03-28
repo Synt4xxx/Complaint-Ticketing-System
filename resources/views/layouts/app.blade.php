@@ -8,44 +8,39 @@
         <title>@yield('title')</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <<link rel="stylesheet" href="{{ asset('fonts/figtree.css') }}">
+
 
         <!-- Scripts -->
+        @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <!-- Theme Script -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                if (localStorage.getItem("theme") === "dark") {
-                    document.documentElement.classList.add("dark");
-                }
-            });
-
-            function toggleTheme() {
-                if (document.documentElement.classList.contains("dark")) {
-                    document.documentElement.classList.remove("dark");
-                    localStorage.setItem("theme", "light");
-                } else {
-                    document.documentElement.classList.add("dark");
-                    localStorage.setItem("theme", "dark");
-                }
-            }
-        </script>
+        
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen  bg-gray-100 dark:bg-gray-900">
+        <!-- Loader (Moved inside <body>) -->
+        <div id="loader" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+        </div>
+
+        
 
             <!-- Navigation -->
+            @php
+            $user = auth()->user();
+            @endphp
+
             @auth
-                @if(auth()->check() && auth()->user()->role === 'admin')
+                @if($user && $user->role === 'admin')
                     @include('layouts.admin-nav')
-                @elseif(auth()->check() && auth()->user()->role === 'customer')
+                @elseif($user && $user->role === 'customer')
                     @include('layouts.customer-nav')
-                @elseif(auth()->check() && auth()->user()->role === 'support_staff')
+                @elseif($user && $user->role === 'support_staff')
                     @include('layouts.support-nav')
                 @endif
             @endauth
+
 
             <!-- Flash Messages -->
             @if (session('success'))

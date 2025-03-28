@@ -3,14 +3,14 @@
 
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div class="flex items-center mb-4 sm:mb-0">
                 <a href="{{ route('admin.dashboard') }}" 
-                   class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 mr-4" 
+                   class="inline-flex items-center justify-center w-10 h-10 max-w-xs rounded-lg bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" 
                    title="Back to Dashboard">
-                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg width="24" height="24" class="text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </a>
@@ -61,8 +61,6 @@
                                         {{ $complaint->priority }}
                                     </span>
                                 </td>
-                    
-                                <!-- New Column: Assigned Support Staff -->
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                     @if($complaint->assignedUser)
                                         {{ $complaint->assignedUser->name }}
@@ -70,21 +68,15 @@
                                         <span class="text-red-500">Unassigned</span>
                                     @endif
                                 </td>
-                                
-                                
-                                
-                    
                                 <td class="px-6 py-4 whitespace-nowrap text-sm flex space-x-2">
                                     <a href="{{ route('admin.complaint-show', $complaint->id) }}"
                                        class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition duration-150">
                                         View Details
                                     </a>
-                    
                                     <button onclick="openAssignModal({{ $complaint->id }})"
                                             class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition duration-150">
                                         Assign
                                     </button>
-                    
                                     <form action="{{ route('admin.complaints.destroy', $complaint->id) }}" method="POST"
                                           onsubmit="return confirm('Are you sure you want to delete this complaint?');">
                                         @csrf
@@ -98,9 +90,8 @@
                             </tr>
                         @endforeach
                     </tbody>
-                                    </table>
+                </table>
             </div>
-
             <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
                 {{ $complaints->links() }}
             </div>
@@ -116,79 +107,20 @@
         <form id="assignForm" action="{{ route('admin.complaints.assign', ':id') }}" method="POST">
             @csrf
             <input type="hidden" name="complaint_id" id="complaint_id">
-        
-    <label for="support_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        Select Support Staff
-    </label>
-    <select name="support_id" id="support_id" class="w-full border-gray-300 rounded-lg">
-        <option value="">-- Select Support Staff --</option>
-        @foreach($supportStaff as $support)
-            <option value="{{ $support->id }}">{{ $support->name }}</option>
-        @endforeach
-    </select>
-
-    <div class="flex justify-end space-x-2 mt-4">
-        <button type="button" onclick="closeAssignModal()" class="px-4 py-2 bg-gray-500 text-white rounded-lg">
-            Cancel
-        </button>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">
-            Assign
-        </button>
+            <label for="support_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Select Support Staff
+            </label>
+            <select name="support_id" id="support_id" class="w-full border-gray-300 rounded-lg">
+                <option value="">-- Select Support Staff --</option>
+                @foreach($supportStaff as $support)
+                    <option value="{{ $support->id }}">{{ $support->name }}</option>
+                @endforeach
+            </select>
+            <div class="flex justify-end space-x-2 mt-4">
+                <button type="button" onclick="closeAssignModal()" class="px-4 py-2 bg-gray-500 text-white rounded-lg">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Assign</button>
+            </div>
+        </form>
     </div>
-</form>
-
-    </div>
-    <script>
-        function openAssignModal(complaintId) {
-            document.getElementById('complaint_id').value = complaintId;
-            
-            // Update form action dynamically
-            let form = document.getElementById('assignForm');
-            form.action = `/admin/complaints/${complaintId}/assign`;
-        
-            document.getElementById('assignModal').classList.remove('hidden');
-        }
-        
-        function closeAssignModal() {
-            document.getElementById('assignModal').classList.add('hidden');
-        }
-        
-        document.getElementById('assignForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form from reloading the page
-        
-            let complaintId = document.getElementById('complaint_id').value;
-            let supportId = document.getElementById('support_id').value;
-            let formData = new FormData();
-            formData.append('_token', document.querySelector('input[name="_token"]').value);
-            formData.append('support_id', supportId);
-        
-            fetch(`/admin/complaints/${complaintId}/assign`, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' } // Identify as an AJAX request
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("✅ Complaint assigned successfully!");
-        
-                    // Update the UI dynamically
-                    let row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
-                    if (row) {
-                        row.querySelector(".status").innerHTML = `<span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Assigned</span>`;
-                        row.querySelector(".support-staff").innerText = data.support_name;
-                    }
-        
-                    closeAssignModal();
-                } else {
-                    alert("❌ " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("❌ Something went wrong!");
-            });
-        });
-        </script>
-        
+</div>
 @endsection
