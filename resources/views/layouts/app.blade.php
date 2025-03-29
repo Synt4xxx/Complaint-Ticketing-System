@@ -14,6 +14,8 @@
         <!-- Scripts -->
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="{{ asset('js/app.js') }}" defer></script>
+
 
         
     </head>
@@ -56,9 +58,10 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="pt-10">
                 @yield('content')
             </main>
         </div>
+        @yield('scripts')
     </body>
 </html>

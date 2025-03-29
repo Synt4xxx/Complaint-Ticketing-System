@@ -1,12 +1,8 @@
 import './bootstrap';
-
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
-
 Alpine.start();
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     // Hide loader on page load
@@ -24,8 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-// Tailwind Configuration
-window.tailwind = window.tailwind || {};
+
+// Tailwind Dark Mode Configuration
+window.tailwind = window.tailwind || {};    
 tailwind.config = {
     darkMode: "class",
     theme: {
@@ -38,7 +35,7 @@ tailwind.config = {
     },
 };
 
-// Initialize theme based on localStorage or system preference
+// Initialize Theme
 function initializeTheme() {
     if (
         localStorage.theme === "dark" ||
@@ -51,7 +48,7 @@ function initializeTheme() {
     updateThemeIcons();
 }
 
-// Update theme icons visibility
+// Update Theme Icons
 function updateThemeIcons() {
     const sunIcon = document.querySelector(".sun-icon");
     const moonIcon = document.querySelector(".moon-icon");
@@ -62,25 +59,40 @@ function updateThemeIcons() {
         moonIcon.classList.toggle("hidden", isDark);
     }
 }
-function openAssignModal(complaintId) {
-    document.getElementById('complaint_id').value = complaintId;
 
-    // Update form action dynamically
+// ✅ Fix `openAssignModal()` Not Defined
+window.openAssignModal = function (complaintId) {
+    console.log("🔹 openAssignModal() called with ID:", complaintId);
+
+    let modal = document.getElementById('assignModal');
+    let complaintInput = document.getElementById('complaint_id');
     let form = document.getElementById('assignForm');
+
+    if (!modal || !complaintInput || !form) {
+        console.error("❌ Modal, complaint input, or form not found.");
+        return;
+    }
+
+    complaintInput.value = complaintId;
     form.action = `/admin/complaints/${complaintId}/assign`;
+    
+    modal.classList.remove('hidden');
+};
 
-    document.getElementById('assignModal').classList.remove('hidden');
-}
+// ✅ Close Modal Function
+window.closeAssignModal = function () {
+    let modal = document.getElementById('assignModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+};
 
-function closeAssignModal() {
-    document.getElementById('assignModal').classList.add('hidden');
-}
-
+// Handle Assign Form Submission
 document.addEventListener('DOMContentLoaded', function () {
     let assignForm = document.getElementById('assignForm');
     if (assignForm) {
         assignForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form from reloading the page
+            event.preventDefault();
 
             let complaintId = document.getElementById('complaint_id').value;
             let supportId = document.getElementById('support_id').value;
@@ -91,30 +103,30 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/admin/complaints/${complaintId}/assign`, {
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' } // Identify as an AJAX request
+                headers: { 'X-Requested-With': 'XMLHttpRequest' } 
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("✅ Complaint assigned successfully!");
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ Complaint assigned successfully!");
+                    location.reload(); // Reload the page after assignment
 
-                        // Update the UI dynamically
-                        let row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
-                        if (row) {
-                            row.querySelector(".status").innerHTML = `<span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Assigned</span>`;
-                            row.querySelector(".support-staff").innerText = data.support_name;
-                        }
-
-                        closeAssignModal();
-                    } else {
-                        alert("❌ " + data.message);
+                    let row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+                    if (row) {
+                        row.querySelector(".status").innerHTML = 
+                            `<span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Assigned</span>`;
+                        row.querySelector(".support-staff").innerText = data.support_name;
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("❌ Something went wrong!");
-                });
+
+                    closeAssignModal();
+                } else {
+                    alert("❌ " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("❌ Something went wrong!");
+            });
         });
     }
 });
-
