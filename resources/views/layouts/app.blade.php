@@ -46,7 +46,7 @@
 
             <!-- Flash Messages -->
             @if (session('success'))
-                <div class="bg-green-100 text-green-800 p-3 rounded mb-4 mx-4 mt-4">
+                <div class="bg-green-100 text-green-800 p-3 rounded mb-4 mx-4 mt-10">
                     {{ session('success') }}
                 </div>
             @endif

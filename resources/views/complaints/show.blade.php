@@ -12,7 +12,6 @@
 
         <!-- Content -->
         <div class="p-6 space-y-4">
-
             <div>
                 <h3 class="font-semibold text-gray-900 dark:text-white">Drugstore</h3>
                 <p class="text-gray-600 dark:text-gray-300">{{ $complaint->drugstore_name }}</p>
@@ -48,6 +47,30 @@
                 <h3 class="font-semibold text-gray-900 dark:text-white">Details</h3>
                 <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ $complaint->description }}</p>
             </div>
+
+            <!-- Attachments Section -->
+            @if($complaint->attachments->isNotEmpty())
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Attachments</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                        @foreach($complaint->attachments as $attachment)
+                            <div class="border p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                @if(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <!-- Image Preview -->
+                                    <img src="{{ asset($attachment->file_path) }}" alt="Attachment" class="w-full h-48 object-cover rounded-lg">
+                                @else
+                                    <!-- Download Link for Other Files -->
+                                    <a href="{{ asset('storage/' . $attachment->file_path) }}" class="text-blue-500 dark:text-blue-400 hover:underline" target="_blank">
+                                        {{ $attachment->file_name }}
+                                    </a>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <p class="text-gray-500 dark:text-gray-400">No attachments uploaded.</p>
+            @endif
 
         </div>
 

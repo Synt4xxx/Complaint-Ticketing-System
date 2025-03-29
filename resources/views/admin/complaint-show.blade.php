@@ -49,6 +49,21 @@
                 <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ $complaint->description }}</p>
             </div>
 
+            <!-- Attachments -->
+            @if($complaint->attachments && count($complaint->attachments) > 0)
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Attachments</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        @foreach($complaint->attachments as $attachment)
+                            <div class="border rounded-lg overflow-hidden">
+                                <img src="{{ asset($attachment->file_path) }}" class="w-full h-40 object-cover" alt="Complaint Attachment">
+                                <p class="text-center text-sm text-gray-500 dark:text-gray-400 py-2">{{ $attachment->file_name }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
         </div>
 
         <!-- Back Button -->

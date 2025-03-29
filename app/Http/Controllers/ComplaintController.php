@@ -91,11 +91,12 @@ class ComplaintController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function show($id): View
+    public function show(Complaint $complaint)
     {
-        $complaint = Complaint::where('user_id', Auth::id())->findOrFail($id);
+        $complaint->load('attachments'); // Eager load attachments
         return view('complaints.show', compact('complaint'));
     }
+    
 
     /**
      * Show the form for editing the specified complaint.
